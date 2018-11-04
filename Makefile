@@ -1,7 +1,7 @@
 AUTHOR=yellowdocker
 NAME=rinkaway
 NETWORKPORT=30303
-VERSION=latest
+VERSION=5lines
 PWD=/dockerbackup
 RPCPORT=8545
 FULLDOCKERNAME=$(AUTHOR)/$(NAME):$(VERSION)
