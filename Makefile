@@ -2,7 +2,6 @@ AUTHOR=yellowdocker
 NAME=rinkaway
 NETWORKPORT=30303
 VERSION=5lines
-PWD=/dockerbackup
 RPCPORT=8545
 FULLDOCKERNAME=$(AUTHOR)/$(NAME):$(VERSION)
 
@@ -32,7 +31,7 @@ properdatavolume:
 	docker volume create maxrinkeby
 
 init: properdatavolume
-	docker run -d -v maxrinkeby:/root/.ethereum -v rinkeby.json:/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --rinkeby --datadir /root/.ethereum init /root/rinkeby.json/rinkeby.json
+	docker run -d --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --rinkeby --datadir /root/.ethereum init /root/rinkeby.json
 
 rinkeby:
 	docker run -d --name=rinkeby -h rinkeby --volumes-from data-rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) $(AUTHOR)/$(NAME):$(VERSION)
