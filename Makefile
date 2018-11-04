@@ -27,3 +27,12 @@ rinkeby:
 
 console:
 	docker exec -ti eth /usr/local/sbin/geth attach ipc:/root/.ethereum/geth.ipc
+
+properdatavolume:
+	docker volume create maxrinkeby
+
+init: properdatavolume
+	docker run -d -v maxrinkeby:/root/.ethereum -v rinkeby.json:/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --rinkeby --datadir /root/.ethereum init /root/rinkeby.json/rinkeby.json
+
+rinkeby:
+	docker run -d --name=rinkeby -h rinkeby --volumes-from data-rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) $(AUTHOR)/$(NAME):$(VERSION)
