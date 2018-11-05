@@ -38,7 +38,7 @@ init: properdatavolume
 	docker run -d --name init --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --rinkeby --datadir /root/.ethereum init /root/rinkeby.json
 	docker logs init
 	echo "Let's create an account now"
-	docker run -d --name init2 --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --password $(KEYS)/pw account new 2>&1 | tee `pwd`/.ethereum/admin.id
+	docker run -d --name init2 --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --password $(KEYS)/pw account new 2>&1 |sed 's/^/0x/' >`pwd`/.ethereum/admin.id
 	docker logs init
 	
 max:
