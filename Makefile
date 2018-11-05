@@ -5,7 +5,7 @@ VERSION=5lines
 RPCPORT=8545
 FULLDOCKERNAME=$(AUTHOR)/$(NAME):$(VERSION)
 KEYS=`pwd`/.ethereum/keystore
-MAXKEY=0x`cat .ethereum/admin.id`
+MAXKEY=`cat .ethereum/admin.id`
 
 build:
 	docker build -t $(FULLDOCKERNAME) .
@@ -41,7 +41,9 @@ init:
 	docker logs init2
 	
 max:
-	docker run -d --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json --name rinkeby -h rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) -e ADMINETHERBASE=`cat .ethereum/admin.id` $(AUTHOR)/$(NAME):$(VERSION)
+	echo `cat .ethereum/admin.id`
+	docker run -d --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json --name rinkeby -h rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) -e ADMINETHERBASE=`cat .ethereum/admin.id` $(AUTHOR)/$(NAME):$(VERSION) --rinkeby --cache=1024 --rpccorsdomain='*' --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3 --rpc --rpcport 8545 --rpcaddr 0.0.0.0 --datadir /root/.ethereum --etherbase ${MAXKEY} --verbosity 6 --identity rinkeby
+
 
 reset:
 	docker rm `docker ps -aq`
