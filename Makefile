@@ -31,19 +31,16 @@ rinkeby:
 console:
 	docker exec -ti eth /usr/local/sbin/geth attach ipc:/root/.ethereum/geth.ipc
 
-properdatavolume:
-	docker volume create maxrinkeby
-
-init: properdatavolume
+init:
+	mkdir -p .ethereum
 	docker run -d --name init --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --rinkeby --datadir /root/.ethereum init /root/rinkeby.json
 	docker logs init
-	echo "Let's create an account now"
+	echo "Creating an account now"
 	docker run -d --name init2 --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --password $(KEYS)/pw account new 2>&1 |sed 's/^/0x/' >`pwd`/.ethereum/admin.id
-	docker logs init
+	docker logs init2
 	
 max:
-	docker run -d --mount type=volume,source=maxrinkeby,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json --name rinkeby -h rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) -e ADMINETHERBASE=0x9293243982347234974  $(AUTHOR)/$(NAME):$(VERSION)
+	docker run -d --mount type=bind,source=`pwd`/.ethereum,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json --name rinkeby -h rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) -e ADMINETHERBASE=0x9293243982347234974  $(AUTHOR)/$(NAME):$(VERSION)
 
 reset:
 	docker rm `docker ps -aq`
-	docker volume rm maxrinkeby
