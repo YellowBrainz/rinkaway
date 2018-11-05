@@ -17,6 +17,8 @@ stop:
 
 clean:
 	docker rm -f rinkeby
+	docker rm -f init
+	docker rm -f init2
 
 cleanrestart: clean start
 
