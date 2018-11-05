@@ -38,9 +38,8 @@ init: properdatavolume
 	docker run -d --name init2 --mount type=volume,source=maxrinkeby,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json $(AUTHOR)/$(NAME):$(VERSION) --password $(KEYS)/pw account new
 	docker logs init
 	
-
-rinkeby:
-	docker run -d --mount type=volume,source=maxrinkeby,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json --name=rinkeby -h rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) $(AUTHOR)/$(NAME):$(VERSION)
+max:
+	docker run -d --mount type=volume,source=maxrinkeby,target=/root/.ethereum --mount type=bind,source=`pwd`/rinkeby.json,target=/root/rinkeby.json --name rinkeby -h rinkeby -p $(NETWORKPORT):$(NETWORKPORT) -p $(RPCPORT):$(RPCPORT) -e ADMINETHERBASE=0x9293243982347234974  $(AUTHOR)/$(NAME):$(VERSION)
 
 reset:
 	docker rm `docker ps -aq`
