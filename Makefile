@@ -26,7 +26,7 @@ deepclean:
 cleanrestart: clean start
 
 console:
-	docker exec -ti eth /usr/local/sbin/geth attach ipc:/root/.ethereum/geth.ipc
+	docker exec -ti rinkeby geth attach
 
 rmkeys:
 	@if [ ! -d ./.ethereum/keystore ]; then mkdir -p ./.ethereum/keystore; else rm -f ./.ethereum/keystore/UTC*; fi
